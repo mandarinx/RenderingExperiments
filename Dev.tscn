@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c312ydx2e1su6"]
+[gd_scene load_steps=3 format=3 uid="uid://c312ydx2e1su6"]
 
 [ext_resource type="Script" path="res://Dev.cs" id="1_eulxn"]
+[ext_resource type="Script" path="res://ImGUI.cs" id="2_q5os2"]
 
 [node name="Dev" type="Control" node_paths=PackedStringArray("grabHandle", "subViewportContainer")]
 layout_mode = 3
@@ -49,3 +50,9 @@ layout_mode = 2
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
+
+[node name="ImGUI" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_q5os2")
