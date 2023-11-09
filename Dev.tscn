@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://c312ydx2e1su6"]
+
+[ext_resource type="Script" path="res://Dev.cs" id="1_eulxn"]
+
+[node name="Dev" type="Control" node_paths=PackedStringArray("grabHandle", "subViewportContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_eulxn")
+grabHandle = NodePath("Control/GrabHandle")
+subViewportContainer = NodePath("Control/SubViewportContainer")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.113725, 0.117647, 0.12549, 1)
+
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Control"]
+layout_mode = 2
+offset_right = 1600.0
+offset_bottom = 900.0
+scale = Vector2(0.5, 0.5)
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Control/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1600, 900)
+render_target_update_mode = 4
+
+[node name="GrabHandle" type="ColorRect" parent="Control"]
+layout_mode = 2
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2

@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://dn0mepuitdswr"]
+
+[ext_resource type="Material" uid="uid://cyohiis2il2v0" path="res://SkewVertical.tres" id="1_m764q"]
+[ext_resource type="Shader" path="res://SkewVertical.gdshader" id="2_dyqnx"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_6ysis"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtdfp"]
+render_priority = 0
+shader = ExtResource("2_dyqnx")
+shader_parameter/CURVATURE = 0.1
+shader_parameter/CURVATURE_ACTIVE = null
+shader_parameter/CURVATURE_DISTANCE = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_e7d86"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.52487)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, -1.74846e-07, 1, 0, -4, -4.37114e-08, 0, 0, -1.8301)
+material_override = ExtResource("1_m764q")
+mesh = SubResource("QuadMesh_6ysis")
+skeleton = NodePath("../Camera3D")
+surface_material_override/0 = SubResource("ShaderMaterial_vtdfp")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.518817, 0, 0, 0, 0.489089, 0, 0, 0, 0.214912, 0, 0.218436, -2.33128)
+material_override = ExtResource("1_m764q")
+instance_shader_parameters/color = Color(1, 1, 1, 1)
+mesh = SubResource("BoxMesh_e7d86")
+surface_material_override/0 = ExtResource("1_m764q")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.518817, 0, 0, 0, 0.732072, 0, 0, 0, 0.214912, 0.660118, 0.218436, -3.01007)
+instance_shader_parameters/color = Color(1, 1, 1, 1)
+mesh = SubResource("BoxMesh_e7d86")
+surface_material_override/0 = ExtResource("1_m764q")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.518817, 0, 0, 0, 0.732072, 0, 0, 0, 0.214912, -1.28458, 0.337382, -3.47351)
+instance_shader_parameters/color = Color(1, 1, 1, 1)
+mesh = SubResource("BoxMesh_e7d86")
+surface_material_override/0 = ExtResource("1_m764q")

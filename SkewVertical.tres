@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cyohiis2il2v0"]
+
+[ext_resource type="Shader" path="res://SkewVertical.gdshader" id="1_1gef2"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_1gef2")
+shader_parameter/CURVATURE = null
+shader_parameter/CURVATURE_ACTIVE = null
+shader_parameter/CURVATURE_DISTANCE = null
