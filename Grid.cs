@@ -1,38 +1,50 @@
-using System.Diagnostics;
 using Godot;
+using RenderingExperiments.Editor;
+
+public class GridState {
+	public Vector2 clickPosLocal;
+	[Space]
+	public int     cellsWidth  = 16;
+	public int     cellsHeight = 9;
+	public int     cellSize    = 90;
+	[ReadOnly]
+	public Vector2 gridSize;
+	[ReadOnly]
+	public Vector2 gridExtents;
+	//[ImGuiButton]
+	//private void RecalcGrid() {
+	//  gridSize = ...
+	//}
+}
 
 public partial class Grid : Node2D {
 
-	private Vector2 clickPosLocal;
-	private int     cellsWidth  = 16;
-	private int     cellsHeight = 9;
-	private int     cellSize    = 90;
-	private Vector2 gridSize;
-	private Vector2 gridExtents;
-	
-	private int[]   burnable;
+	private int[] burnable;
 
+	private GridState state = new();
+	public  GridState State => state;
+	
 	public override void _Ready() {
-		burnable = new int[cellsWidth * cellsHeight];
-		clickPosLocal = new Vector2(int.MinValue, int.MinValue);
-		gridSize = new Vector2(cellsWidth * cellSize, cellsHeight * cellSize);
-		gridExtents = new Vector2(cellsWidth * cellSize * 0.5f, cellsHeight * cellSize * 0.5f);
+		burnable = new int[state.cellsWidth * state.cellsHeight];
+		state.clickPosLocal = new Vector2(int.MinValue, int.MinValue);
+		state.gridSize = new Vector2(state.cellsWidth * state.cellSize, state.cellsHeight * state.cellSize);
+		state.gridExtents = new Vector2(state.cellsWidth * state.cellSize * 0.5f, state.cellsHeight * state.cellSize * 0.5f);
 	}
 
-	public override void _UnhandledInput(InputEvent @event) {
+	public override void _Input(InputEvent @event) {
 		if (!@event.IsActionReleased("Click")) {
 			return;
 		}
 
 		if (@event is InputEventMouseButton evtMouseBtn) {
-			clickPosLocal = PixelsToLocal(evtMouseBtn.Position);
+			state.clickPosLocal = PixelsToLocal(evtMouseBtn.Position);
 
-			if (IsOutsideGrid(clickPosLocal, gridExtents)) {
+			if (IsOutsideGrid(state.clickPosLocal, state.gridExtents)) {
 				return;
 			}
 			
-			Vector2 coord = LocalToCoord(clickPosLocal, cellSize, gridExtents);
-			int     i     = CoordToIndex(coord, cellsWidth);
+			Vector2 coord = LocalToCoord(state.clickPosLocal, state.cellSize, state.gridExtents);
+			int     i     = CoordToIndex(coord, state.cellsWidth);
 			burnable[i] = 1000;
 
 			QueueRedraw();
@@ -40,6 +52,11 @@ public partial class Grid : Node2D {
 	}
 
 	public override void _Process(double delta) {
+		state.gridSize = new Vector2(state.cellsWidth * state.cellSize, 
+		                             state.cellsHeight * state.cellSize);
+		state.gridExtents = new Vector2(state.cellsWidth * state.cellSize * 0.5f, 
+		                                state.cellsHeight * state.cellSize * 0.5f);
+
 		for (int i = 0; i < burnable.Length; ++i) {
 			burnable[i] = Mathf.Max(burnable[i] - 1, 0);
 		}
@@ -64,26 +81,26 @@ public partial class Grid : Node2D {
 			}
 			
 			float   valueRelative = Mathf.Clamp(value / 1000f, 0f, 1f);
-			Vector2 coord         = IndexToCoord(i, cellsWidth);
+			Vector2 coord         = IndexToCoord(i, state.cellsWidth);
 			Vector2 local         = CoordToLocal(coord);
-			DrawRect(new Rect2(local, new Vector2(cellSize, cellSize)), 
+			DrawRect(new Rect2(local, new Vector2(state.cellSize, state.cellSize)), 
 					 new Color(valueRelative, 0f, 0f, valueRelative));
 		}
 	}
 
 	private void DrawGrid() {
 		// vertical
-		for (int i = 0; i <= cellsWidth; ++i) {
-			float col = -gridExtents.X + i * cellSize;
-			DrawLine(new Vector2(col, -gridExtents.Y), 
-					 new Vector2(col,  gridExtents.Y), 
+		for (int i = 0; i <= state.cellsWidth; ++i) {
+			float col = -state.gridExtents.X + i * state.cellSize;
+			DrawLine(new Vector2(col, -state.gridExtents.Y), 
+					 new Vector2(col,  state.gridExtents.Y), 
 					 Colors.White);
 		}
 		// horizontal
-		for (int i = 0; i <= cellsHeight; ++i) {
-			float row = -gridExtents.Y + i * cellSize;
-			DrawLine(new Vector2(-gridExtents.X, row), 
-					 new Vector2(gridExtents.X, row), 
+		for (int i = 0; i <= state.cellsHeight; ++i) {
+			float row = -state.gridExtents.Y + i * state.cellSize;
+			DrawLine(new Vector2(-state.gridExtents.X, row), 
+					 new Vector2(state.gridExtents.X, row), 
 					 Colors.White);
 		}
 	}
@@ -101,8 +118,8 @@ public partial class Grid : Node2D {
 	}
 	
 	private Vector2 CoordToLocal(Vector2 coord) {
-		coord *= cellSize;
-		coord -= gridExtents;
+		coord *= state.cellSize;
+		coord -= state.gridExtents;
 		return coord;
 	}
 

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Godot;
 
 public partial class Dev : Node {
@@ -12,16 +13,29 @@ public partial class Dev : Node {
 	private bool    isScaling;
 	private bool    isMoving;
 
+	public GridState   gridState;
+	public FieldInfo[] fields;
+	public bool        blockInput;
+
 	public override void _Ready() {
 		// Load game
 		var scene     = ResourceLoader.Load<PackedScene>("res://Grid.tscn");
 		var sceneNode = scene.Instantiate();
 		var parent = GetNode<SubViewport>(new NodePath("Control/SubViewportContainer/SubViewport"));
 		parent.AddChild(sceneNode);
+		
+		// Is it possible to pipe the viewport to an imgui image?
 
 		OnMouseExit();
 		subViewportContainer.MouseExited += OnMouseExit;
 
+		if (sceneNode is Grid grid) {
+			gridState = grid.State;
+			fields = gridState.GetType().GetFields(BindingFlags.NonPublic | 
+			                                       BindingFlags.Instance | 
+			                                       BindingFlags.Public);
+		}
+		
 		SetProcess(true);
 	}
 
@@ -51,6 +65,10 @@ public partial class Dev : Node {
 	}
 
 	public override void _Input(InputEvent @event) {
+		if (blockInput) {
+			return;
+		}
+		
 		if (@event is InputEventMouse mouseEvt) {
 			mousePos = mouseEvt.Position;
 		}
